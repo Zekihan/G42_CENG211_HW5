@@ -1,4 +1,4 @@
-package business;
+package business.patient;
 
 public abstract class Patient {
 	

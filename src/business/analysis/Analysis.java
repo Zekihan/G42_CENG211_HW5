@@ -1,4 +1,4 @@
-package business;
+package business.analysis;
 
 public abstract class Analysis {
 	
