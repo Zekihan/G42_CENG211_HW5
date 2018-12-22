@@ -16,27 +16,26 @@ public class Hospital {
 	}
 	
 	public List<Doctor> getDoctors() {
-		return doctors;
+	    return doctors;
 	}
 
 	public List<Patient> getPatients() {
-		return patients;
-	}
-
-	private void setDoctors(List<Doctor> doctors) {
-		this.doctors = doctors;
-	}
-
-	private void setPatients(List<Patient> patients) {
-		this.patients = patients;
+	    return patients;
 	}
 
 	public void addDoctor(Doctor doctor) {
-		doctors.add(doctor);
+	    doctors.add(doctor);
 	}
 	
-	public void addPatint(Patient patient) {
-		patients.add(patient);
+	public void addPatient(Patient patient) {
+	    patients.add(patient);
 	}
 	
+	private void setDoctors(List<Doctor> doctors) {
+	    this.doctors = doctors;
+	}
+
+	private void setPatients(List<Patient> patients) {
+	    this.patients = patients;
+	}
 }

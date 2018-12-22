@@ -13,15 +13,24 @@ public class Examination {
 		setPatient(pat);
 	}
 	
-	public void decideTreatment() {
+	public void askForRadiology() {
 		
 	}
 	
-	public void askAnalysis() {
+	public void askForBloodTest() {
 		
 	}
 	
-
+	public void decideSurgery() {
+		
+	}
+	
+	public void decideTherapy() {
+		
+	}
+	
+	
+	
 	private void setDoctor(Doctor doctor) {
 		this.doctor = doctor;
 	}
