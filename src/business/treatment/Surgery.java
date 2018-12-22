@@ -1,3 +1,11 @@
 package business.treatment;
 
-public class Surgery extends Treatment {}
+import java.util.Date;
+
+public class Surgery extends Treatment {
+
+	public Surgery(Date date) {
+		super(date);
+	}
+	
+}
