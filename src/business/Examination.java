@@ -1,3 +1,10 @@
 package business;
 
-public class Examination {}
+import business.patient.Patient;
+
+public class Examination {
+	
+	private Doctor doctor;
+	private Patient patient;
+	
+}

@@ -1,3 +1,3 @@
-package business;
+package business.doctor;
 
 public class Surgeon extends Doctor {}
