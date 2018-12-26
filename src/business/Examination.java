@@ -29,8 +29,6 @@ public class Examination {
 		
 	}
 	
-	
-	
 	private void setDoctor(Doctor doctor) {
 		this.doctor = doctor;
 	}

@@ -1,25 +1,34 @@
 package business;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import business.doctor.Doctor;
 import business.patient.Patient;
 
 public class Hospital {
 	
-	private List<Doctor> doctors;
-	private List<Patient> patients;
+	private Set<Doctor> doctors;
+	private Set<Patient> patients;
+	private List<SurgeryAppointment> surgeryAppointments;
 	
-	public Hospital(List<Doctor> doctors, List<Patient> patients) {
-	    setDoctors(doctors);
-	    setPatients(patients);
+	public Hospital() {
+		this(new HashSet<>(), new HashSet<>(), new ArrayList<>());
 	}
 	
-	public List<Doctor> getDoctors() {
+	public Hospital(Set<Doctor> doctors, Set<Patient> patients, List<SurgeryAppointment> surgeryAppointments) {
+	    setDoctors(doctors);
+	    setPatients(patients);
+	    setSurgeryAppointments(surgeryAppointments);
+	}
+	
+	public Set<Doctor> getDoctors() {
 	    return doctors;
 	}
 
-	public List<Patient> getPatients() {
+	public Set<Patient> getPatients() {
 	    return patients;
 	}
 
@@ -31,11 +40,21 @@ public class Hospital {
 	    patients.add(patient);
 	}
 	
-	private void setDoctors(List<Doctor> doctors) {
+	public void addSurgeryAppointment(SurgeryAppointment appointment) {
+	    surgeryAppointments.add(appointment);
+	}
+	
+	private void setDoctors(Set<Doctor> doctors) {
 	    this.doctors = doctors;
 	}
 
-	private void setPatients(List<Patient> patients) {
+	private void setPatients(Set<Patient> patients) {
 	    this.patients = patients;
 	}
+
+	private void setSurgeryAppointments(List<SurgeryAppointment> surgeryAppointments) {
+		this.surgeryAppointments = surgeryAppointments;
+	}
+	
+	
 }
