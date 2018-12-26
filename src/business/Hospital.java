@@ -1,8 +1,10 @@
 package business;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import business.doctor.Doctor;
@@ -10,46 +12,48 @@ import business.patient.Patient;
 
 public class Hospital {
 	
-	private Set<Doctor> doctors;
-	private Set<Patient> patients;
+	private Map<Doctor, Set<Patient>> doctors;
 	private List<SurgeryAppointment> surgeryAppointments;
 	
 	public Hospital() {
-		this(new HashSet<>(), new HashSet<>(), new ArrayList<>());
-	}
-	
-	public Hospital(Set<Doctor> doctors, Set<Patient> patients, List<SurgeryAppointment> surgeryAppointments) {
-	    setDoctors(doctors);
-	    setPatients(patients);
-	    setSurgeryAppointments(surgeryAppointments);
+		setDoctors(new HashMap<Doctor,Set<Patient>>() );
+	    setSurgeryAppointments(new ArrayList<SurgeryAppointment>());
 	}
 	
 	public Set<Doctor> getDoctors() {
-	    return doctors;
+	    return doctors.keySet();
 	}
 
 	public Set<Patient> getPatients() {
+		Set<Patient> patients = new HashSet<Patient>();
+		for(Set<Patient> patientSet : doctors.values()) {
+			patients.addAll(patientSet);
+		}
 	    return patients;
 	}
 
 	public void addDoctor(Doctor doctor) {
-	    doctors.add(doctor);
+	    doctors.put(doctor,new HashSet<Patient>());
 	}
 	
-	public void addPatient(Patient patient) {
-	    patients.add(patient);
+	public void addDoctor(Doctor doctor, Set<Patient> patients) {
+	    doctors.put(doctor, patients);
+	}
+	
+	public void addPatient(Patient patient, Doctor doctor) throws NoSuchDoctorException {
+	    if(doctors.containsKey(doctor)) {
+	    	doctors.get(doctor).add(patient);
+	    }else {
+	    	throw new NoSuchDoctorException();
+	    }
 	}
 	
 	public void addSurgeryAppointment(SurgeryAppointment appointment) {
 	    surgeryAppointments.add(appointment);
 	}
 	
-	private void setDoctors(Set<Doctor> doctors) {
+	private void setDoctors(Map<Doctor,Set<Patient>> doctors) {
 	    this.doctors = doctors;
-	}
-
-	private void setPatients(Set<Patient> patients) {
-	    this.patients = patients;
 	}
 
 	private void setSurgeryAppointments(List<SurgeryAppointment> surgeryAppointments) {
