@@ -19,7 +19,7 @@ public class Hospital {
 	
 	public Hospital() {
 		setDoctors(new HashMap<Doctor,Set<Patient>>() );
-	    setSurgeryAppointments(new ArrayList<SurgeryAppointment>());
+	    setSurgeryAppointments(new HashMap<Surgeon,Set<SurgeryAppointment>>());
 	}
 	
 	public Set<Doctor> getDoctors() {
