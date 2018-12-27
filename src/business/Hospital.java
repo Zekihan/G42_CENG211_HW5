@@ -1,12 +1,11 @@
 package business;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import business.analysis.Analysis;
 import business.doctor.Doctor;
 import business.doctor.Surgeon;
 import business.patient.Patient;
@@ -15,7 +14,7 @@ public class Hospital {
 	
 	private Map<Doctor, Set<Patient>> doctors;
 	private Map<Surgeon, Set<SurgeryAppointment>> surgeryAppointments;
-	private Map<Patient, Set<Patient>> analysisResults;
+	private Map<Patient, Analysis> analysisResults;
 	
 	public Hospital() {
 		setDoctors(new HashMap<Doctor,Set<Patient>>() );
@@ -53,6 +52,32 @@ public class Hospital {
 	public void addSurgeryAppointment(Surgeon surgeon, SurgeryAppointment appointment) {
 		surgeryAppointments.get(surgeon).add(appointment);
 	    surgeryAppointments.put(surgeon,surgeryAppointments.get(surgeon));
+	}
+	
+	public void addAnalysisResult(Patient patient,Analysis analysis){
+		analysisResults.put(patient,analysis);
+	}
+	
+	public Analysis searchTheResultsOfAnalysis(Patient patient) throws AnalysisNotFoundException{
+		Analysis analysis = analysisResults.get(patient);
+		if(analysis == null) throw new AnalysisNotFoundException();
+		else return analysis;
+	}
+	
+	public Set<Patient> listAllPatientsUnderDoctorCare(Doctor doctor) {
+		return doctors.get(doctor);
+	}
+	
+	public Set<Patient> listAllPatientsDoctorExamined(Doctor doctor) {
+		return doctors.get(doctor);
+	}
+	
+	public Set<Patient> searchAnyPatientThatExaminedInThePast(Doctor doctor) {
+		return doctors.get(doctor);
+	}
+	
+	public Set<SurgeryAppointment> searchAnyAppointedSurgeryForSurgeon(Surgeon surgeon) {
+		return surgeryAppointments.get(surgeon);
 	}
 	
 	private void setDoctors(Map<Doctor,Set<Patient>> doctors) {
