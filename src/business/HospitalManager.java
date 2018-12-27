@@ -75,6 +75,8 @@ public class HospitalManager {
 		try {
 			Patient patient = doctorLine.get(doctor).remove();
 			Examination examination = new Examination(doctor, patient);
+			
+			
 		}catch(NoSuchElementException e){
 			System.out.println("There aren't any patient waiting"); 
 		}
