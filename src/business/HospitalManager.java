@@ -53,8 +53,27 @@ public class HospitalManager {
 	}
 
 	private void doctorAccess() {
+		System.out.println("Please Choose Your Name: " + System.lineSeparator());
+		Map<Integer, Doctor> doctorMap = new HashMap<>();
+		int lineNum = 1;
+		for (Doctor doctor : hospital.getDoctors()) {
+			System.out.println(lineNum + ") " + doctor.getName());
+			doctorMap.put(lineNum, doctor);
+			lineNum++;
+		}
+		int choosenNum = consoleIn.readInt();
+		Doctor doctor = doctorMap.get(lineNum);
+		System.out.println("Welcome Dr " + doctor.getName());
 		
+		System.out.println("Menu: " + System.lineSeparator() + 
+				"1) See next paitent on the waiting line " + System.lineSeparator() +
+				"2) List all patient under your care " + System.lineSeparator() + 
+				"3) Search and see result of analysis " + System.lineSeparator() + 
+				"4) List all patient examined " + System.lineSeparator() + 
+				"5) Search any patient examined in the past " + System.lineSeparator() + 
+				"6) Search any appointed surgery for him/her ");
 	}
+	
 
   	private void registerPatient(String patientName, String doctorName) {
 		Patient patient = new WalkingCase(patientName);

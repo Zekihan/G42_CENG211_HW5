@@ -10,6 +10,17 @@ public class Doctor {
 		setProfession(profession);
 	}
 	
+	
+	public String getName() {
+		return name;
+	}
+
+
+	public String getProfession() {
+		return profession;
+	}
+
+
 	private void setName(String name) {
 		this.name = name;
 	}
