@@ -63,16 +63,21 @@ public class HospitalManager {
 		}
 		int choosenNum = consoleIn.readInt();
 		Doctor doctor = doctorMap.get(lineNum);
-		System.out.println("Welcome Dr " + doctor.getName());
-		
-		System.out.println("Menu: " + System.lineSeparator() + 
+		System.out.println("Welcome Dr " + doctor.getName() + System.lineSeparator() +
+				"Menu: " + System.lineSeparator() + 
 				"1) See next paitent on the waiting line " + System.lineSeparator() +
 				"2) List all patient under your care " + System.lineSeparator() + 
 				"3) Search and see result of analysis " + System.lineSeparator() + 
 				"4) List all patient examined " + System.lineSeparator() + 
 				"5) Search any patient examined in the past " + System.lineSeparator() + 
-				"6) Search any appointed surgery for him/her ");
+				"6) Search any appointed surgery for you ");
+		int option = consoleIn.readInt();
+		switch(option) {
+			case 1: seeNextPatient
+			
+		}
 	}
+	
 	
 
   	private void registerPatient(String patientName, String doctorName) {
@@ -89,16 +94,21 @@ public class HospitalManager {
 		
 		
 	}
-	
-	public void seeNextPatient(Doctor doctor) {
+	private void seeNextPatient(Doctor doctor) {
+		Examination examination = examinePatient(doctor);
+		
+		Switch
+	}
+  	
+	private Examination examinePatient(Doctor doctor) {
 		try {
 			Patient patient = doctorLine.get(doctor).remove();
 			Examination examination = new Examination(doctor, patient);
-			
-			
+			return examination;
 		}catch(NoSuchElementException e){
 			System.out.println("There aren't any patient waiting"); 
 		}
+		return null;
 		
 	}
 
