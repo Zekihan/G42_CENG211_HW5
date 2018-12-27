@@ -8,12 +8,14 @@ import java.util.Map;
 import java.util.Set;
 
 import business.doctor.Doctor;
+import business.doctor.Surgeon;
 import business.patient.Patient;
 
 public class Hospital {
 	
 	private Map<Doctor, Set<Patient>> doctors;
-	private List<SurgeryAppointment> surgeryAppointments;
+	private Map<Surgeon, Set<SurgeryAppointment>> surgeryAppointments;
+	private Map<Patient, Set<Patient>> analysisResults;
 	
 	public Hospital() {
 		setDoctors(new HashMap<Doctor,Set<Patient>>() );
@@ -48,15 +50,16 @@ public class Hospital {
 	    }
 	}
 	
-	public void addSurgeryAppointment(SurgeryAppointment appointment) {
-	    surgeryAppointments.add(appointment);
+	public void addSurgeryAppointment(Surgeon surgeon, SurgeryAppointment appointment) {
+		surgeryAppointments.get(surgeon).add(appointment);
+	    surgeryAppointments.put(surgeon,surgeryAppointments.get(surgeon));
 	}
 	
 	private void setDoctors(Map<Doctor,Set<Patient>> doctors) {
 	    this.doctors = doctors;
 	}
 
-	private void setSurgeryAppointments(List<SurgeryAppointment> surgeryAppointments) {
+	private void setSurgeryAppointments(Map<Surgeon, Set<SurgeryAppointment>> surgeryAppointments) {
 		this.surgeryAppointments = surgeryAppointments;
 	}
 	
