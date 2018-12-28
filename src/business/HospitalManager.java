@@ -128,12 +128,15 @@ public class HospitalManager {
 	}
 
   	private void listAllPatientsUnderCare(Doctor doctor) {
-		
-		
+  		int lineNum = 1;
+		for(Patient patient: hospital.getAllPatientsUnderDoctorCare(doctor)) {
+			System.out.println(lineNum + ") " + patient.toString());
+			lineNum++;
+		}
 	}
 
 	private void searchAnalysisResult(String patientName) {
-		// TODO Auto-generated method stub
+		
 		
 	}
 

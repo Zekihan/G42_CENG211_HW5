@@ -14,11 +14,12 @@ public class Hospital {
 	
 	private Map<Doctor, Set<Patient>> doctors;
 	private Map<Surgeon, Set<SurgeryAppointment>> surgeryAppointments;
-	private Map<Patient, Analysis> analysisResults;
+	private Map<Patient, Set<Analysis>> analysisResults;
 	
 	public Hospital() {
 		setDoctors(new HashMap<Doctor,Set<Patient>>() );
 	    setSurgeryAppointments(new HashMap<Surgeon,Set<SurgeryAppointment>>());
+	    setAnalysisResults(new HashMap<Patient, Set<Analysis>>());
 	}
 	
 	public Set<Doctor> getDoctors() {
@@ -55,13 +56,19 @@ public class Hospital {
 	}
 	
 	public void addAnalysisResult(Patient patient,Analysis analysis){
-		analysisResults.put(patient,analysis);
+		if(!analysisResults.containsKey(patient)) {
+			analysisResults.put(patient, new HashSet<Analysis>());
+		}
+		analysisResults.get(patient).add(analysis);
 	}
 	
-	public Analysis searchTheResultsOfAnalysis(Patient patient) throws AnalysisNotFoundException{
-		Analysis analysis = analysisResults.get(patient);
-		if(analysis == null) throw new AnalysisNotFoundException();
-		else return analysis;
+	public Set<Analysis> searchTheResultsOfAnalysis(Patient patient) throws AnalysisNotFoundException{
+		Set<Analysis> analysis = analysisResults.get(patient);
+		if(analysis == null) {
+			throw new AnalysisNotFoundException();
+		}else {
+			return analysis;
+		}
 	}
 	
 	public Set<Patient> getAllPatientsUnderDoctorCare(Doctor doctor) {
@@ -86,6 +93,10 @@ public class Hospital {
 
 	private void setSurgeryAppointments(Map<Surgeon, Set<SurgeryAppointment>> surgeryAppointments) {
 		this.surgeryAppointments = surgeryAppointments;
+	}
+
+	private void setAnalysisResults(Map<Patient, Set<Analysis>> analysisResults) {
+		this.analysisResults = analysisResults;
 	}
 	
 	
