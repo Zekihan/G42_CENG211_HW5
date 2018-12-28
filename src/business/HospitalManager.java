@@ -136,7 +136,9 @@ public class HospitalManager {
 	}
 
 	private void searchAnalysisResult(String patientName) {
-		
+		Search search = new Search<Patient>();
+		Patient patient = 
+		hospital.searchTheResultsOfAnalysis(patient);
 		
 	}
 
