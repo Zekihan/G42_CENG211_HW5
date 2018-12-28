@@ -1,6 +1,7 @@
 package business;
 
 import java.util.*;
+
 import business.doctor.*;
 import business.patient.*;
 import dataaccess.ConsoleInput;
@@ -73,14 +74,23 @@ public class HospitalManager {
 				"6) Search any appointed surgery for you ");
 		int option = consoleIn.readInt();
 		switch(option) {
-			case 1: seeNextPatient
-			
+			case 1: seeNextPatient(doctor);
+					break;
+			case 2: listAllPatientsUnderCare(doctor);
+					break;
+			case 3: System.out.println("Enter the name of the patient:");
+					searchAnalysisResult(consoleIn.readString());
+					break;
+			case 4: listAllPatientExamined();
+					break;
+			case 5: System.out.println("Enter the name of the patient:");
+					searchPatientExamined();
+					break;
+			case 6: searchSurgeryAppointed();
 		}
 	}
 	
-	
-
-  	private void registerPatient(String patientName, String doctorName) {
+	private void registerPatient(String patientName, String doctorName) {
 		Patient patient = new WalkingCase(patientName);
 		Set<Doctor> doctorSet = hospital.getDoctors();
 		Search<Doctor> search = new Search<>();
@@ -96,9 +106,53 @@ public class HospitalManager {
 	}
 	private void seeNextPatient(Doctor doctor) {
 		Examination examination = examinePatient(doctor);
-		
-		Switch
+		System.out.println(
+				"1) Ask for blood test" + System.lineSeparator() + 
+				"2) Ask for radiology" + System.lineSeparator() + 
+				"3) Write prescription" + System.lineSeparator() + 
+				"4) Decide on surgery" + System.lineSeparator() + 
+				"5) Decide on therapy");
+		int decision = consoleIn.readInt();
+		switch(decision) {
+			case 1: hospital.addAnalysisResult(examination.getPatient(), examination.askForBloodTest());
+					break;
+			case 2: hospital.addAnalysisResult(examination.getPatient(), examination.askForRadiology());
+					break;
+			case 3: examination.writePrescription();
+					break;
+			case 4: examination.decideSurgery();
+					break;
+			case 5: examination.decideTherapy();
+					break;
+		}
 	}
+
+  	private void listAllPatientsUnderCare(Doctor doctor) {
+		
+		
+	}
+
+	private void searchAnalysisResult(String patientName) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private void listAllPatientExamined() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private void searchPatientExamined() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private void searchSurgeryAppointed() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	
   	
 	private Examination examinePatient(Doctor doctor) {
 		try {

@@ -1,6 +1,7 @@
 package business;
 
 import business.patient.*;
+import business.analysis.*;
 import business.doctor.*;
 
 public class Examination {
@@ -13,19 +14,33 @@ public class Examination {
 		setPatient(pat);
 	}
 	
-	public void askForRadiology() {
-		
+	public Analysis askForRadiology() {
+		return new Radiology();
 	}
 	
-	public void askForBloodTest() {
-		
+	public Analysis askForBloodTest() {
+		return new BloodTest();
 	}
 	
 	public void decideSurgery() {
-		
+		if (doctor.getClass() != Surgeon.class) {
+			
+		}
 	}
 	
+	public Doctor getDoctor() {
+		return doctor;
+	}
+
+	public Patient getPatient() {
+		return patient;
+	}
+
 	public void decideTherapy() {
+		
+	}	
+	public void writePrescription() {
+		// TODO Auto-generated method stub
 		
 	}
 	
@@ -36,5 +51,7 @@ public class Examination {
 	private void setPatient(Patient patient) {
 		this.patient = patient;
 	}
+
+
 	
 }

@@ -64,7 +64,7 @@ public class Hospital {
 		else return analysis;
 	}
 	
-	public Set<Patient> listAllPatientsUnderDoctorCare(Doctor doctor) {
+	public Set<Patient> getAllPatientsUnderDoctorCare(Doctor doctor) {
 		return doctors.get(doctor);
 	}
 	
