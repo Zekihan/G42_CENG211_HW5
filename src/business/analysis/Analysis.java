@@ -15,7 +15,7 @@ public abstract class Analysis {
 	
 	public int getResult() {
 		Date now = new Date();
-		if(now.after(resultDate)) {
+		if(result == -1 && now.after(resultDate)) {
 			Random rand = new Random();
 			setResult(rand.nextInt(2));
 		}

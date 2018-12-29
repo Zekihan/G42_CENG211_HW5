@@ -2,6 +2,7 @@ package business;
 
 import java.util.*;
 
+import business.analysis.Analysis;
 import business.doctor.*;
 import business.patient.*;
 import dataaccess.ConsoleInput;
@@ -90,11 +91,9 @@ public class HospitalManager {
 		}
 	}
 	
-	private void registerPatient(String patientName, String doctorName) {
+	private void registerPatient(String patientName, String doctorName) throws DoctorNotFoundException {
 		Patient patient = new WalkingCase(patientName);
-		Set<Doctor> doctorSet = hospital.getDoctors();
-		Search<Doctor> search = new Search<>();
-		Doctor doc = search.searchByName(doctorSet, doctorName);
+		Doctor doc = searchDoctorByName(doctorName);
 		if(doctorLine.containsKey(doc)) {
 			doctorLine.get(doc).add(patient);
 		}else {
@@ -114,9 +113,9 @@ public class HospitalManager {
 				"5) Decide on therapy");
 		int decision = consoleIn.readInt();
 		switch(decision) {
-			case 1: hospital.addAnalysisResult(examination.getPatient(), examination.askForBloodTest());
+			case 1: hospital.addAnalysis(examination.getPatient(), examination.askForBloodTest());
 					break;
-			case 2: hospital.addAnalysisResult(examination.getPatient(), examination.askForRadiology());
+			case 2: hospital.addAnalysis(examination.getPatient(), examination.askForRadiology());
 					break;
 			case 3: examination.writePrescription();
 					break;
@@ -135,25 +134,31 @@ public class HospitalManager {
 		}
 	}
 
-	private void searchAnalysisResult(String patientName) {
-		Search search = new Search<Patient>();
-		Patient patient = 
-		hospital.searchTheResultsOfAnalysis(patient);
-		
+	private void searchAnalysisResult(String patientName) throws PatientNotFoundException, AnalysisNotFoundException {
+		Patient patient = searchPatientByName(patientName);
+		Set<Analysis> analyses = hospital.searchAnalyses(patient);
+		int lineNum = 1;
+		for (Analysis analysis: analyses) {
+			if(analysis.getResult() == 1) {
+				System.out.println(lineNum + ") " + analysis.getClass().getName() + " Result is positive");
+			} else {
+				System.out.println(lineNum + ") " + analysis.getClass().getName() + " Result is negative");
+			}
+			
+		}
 	}
 
 	private void listAllPatientExamined() {
-		// TODO Auto-generated method stub
+		
 		
 	}
 
-	private void searchPatientExamined() {
-		// TODO Auto-generated method stub
-		
+	private Patient searchPatientExamined(String name) throws PatientNotFoundException {
+		return searchPatientByName(name);
 	}
 
 	private void searchSurgeryAppointed() {
-		// TODO Auto-generated method stub
+		
 		
 	}
 
@@ -170,6 +175,25 @@ public class HospitalManager {
 		return null;
 		
 	}
+	private Patient searchPatientByName(String name) throws PatientNotFoundException {
+		Set<Patient> patients = hospital.getPatients();
+		for(Patient patient: patients) {
+			if(patient.getName().equals(name)) {
+				return patient;
+			}
+		}
+		throw new PatientNotFoundException();
+	}
+	private Doctor searchDoctorByName(String name) throws DoctorNotFoundException {
+		Set<Doctor> doctors = hospital.getDoctors();
+		for(Doctor doctor: doctors) {
+			if(doctor.getName().equals(name)) {
+				return doctor;
+			}
+		}
+		throw new DoctorNotFoundException();
+	}
+	
 
 	private void setHospital(Hospital hospital) {
 		this.hospital = hospital;

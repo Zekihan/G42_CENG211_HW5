@@ -23,6 +23,7 @@ public class Examination {
 	}
 	
 	public void decideSurgery() {
+		patient = new Inmate(patient.getName());
 		if (doctor.getClass() != Surgeon.class) {
 			
 		}

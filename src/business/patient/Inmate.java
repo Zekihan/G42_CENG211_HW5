@@ -6,4 +6,10 @@ public class Inmate extends Patient {
 		super(name);
 		// TODO Auto-generated constructor stub
 	}
+	
+	public Inmate(Patient patient) {
+		super(patient.getName());
+		// TODO Auto-generated constructor stub
+	}
+	
 }
