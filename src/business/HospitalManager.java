@@ -1,5 +1,7 @@
 package business;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import business.analysis.Analysis;
@@ -13,13 +15,14 @@ public class HospitalManager {
 	private Map<Doctor, Queue<Patient>> doctorLine;
 	private ConsoleInput consoleIn; 
 	private List<String> receptionistList;
+	private Map<Doctor, Set<Patient>> examinedPatients;
 	
 	public HospitalManager() {
 		setDoctorLine(new HashMap<>());
 		setHospital(new Hospital());
 		setConsoleIn(new ConsoleInput());
 		setReceptionistList(new ArrayList<>());
-		
+		setExaminedPatients(new HashMap<>());
 	}
 	
 	public void start() {
@@ -35,14 +38,13 @@ public class HospitalManager {
 		}
 	}
 	
-	private void receptionistAccess() {
+	private void receptionistAccess() throws DoctorNotFoundException {
 		System.out.println("Please Choose Your Name: " + System.lineSeparator());
 		for (int i = 0; i < receptionistList.size(); i++) {
 			int lineNum = i + 1;
 			System.out.println(lineNum + ") " + receptionistList.get(i));
 		}
 		int lineNum = consoleIn.readInt();
-		
 		System.out.println("Welcome " + receptionistList.get(lineNum - 1) );
 		System.out.println("Press enter to register new patient");
 		consoleIn.readString();
@@ -54,7 +56,7 @@ public class HospitalManager {
 		System.out.println("Successfully registered the patient");
 	}
 
-	private void doctorAccess() {
+	private void doctorAccess() throws PatientNotFoundException, AnalysisNotFoundException {
 		System.out.println("Please Choose Your Name: " + System.lineSeparator());
 		Map<Integer, Doctor> doctorMap = new HashMap<>();
 		int lineNum = 1;
@@ -63,7 +65,6 @@ public class HospitalManager {
 			doctorMap.put(lineNum, doctor);
 			lineNum++;
 		}
-		int choosenNum = consoleIn.readInt();
 		Doctor doctor = doctorMap.get(lineNum);
 		System.out.println("Welcome Dr " + doctor.getName() + System.lineSeparator() +
 				"Menu: " + System.lineSeparator() + 
@@ -85,7 +86,7 @@ public class HospitalManager {
 			case 4: listAllPatientExamined();
 					break;
 			case 5: System.out.println("Enter the name of the patient:");
-					searchPatientExamined();
+					searchPatientExamined(consoleIn.readString());
 					break;
 			case 6: searchSurgeryAppointed();
 		}
@@ -99,11 +100,10 @@ public class HospitalManager {
 		}else {
 			doctorLine.put(doc, new LinkedList<Patient>());
 			doctorLine.get(doc).add(patient);
-		}
-		
-		
+		}	
 	}
-	private void seeNextPatient(Doctor doctor) {
+	
+	private void seeNextPatient(Doctor doctor) throws DoctorNotFoundException {
 		Examination examination = examinePatient(doctor);
 		System.out.println(
 				"1) Ask for blood test" + System.lineSeparator() + 
@@ -120,10 +120,20 @@ public class HospitalManager {
 			case 3: examination.writePrescription();
 					break;
 			case 4: examination.decideSurgery();
+					System.out.println("Enter date in format (dd-MM-yyyy): ");
+					Date surgeryDate = dateParser(consoleIn.readString());
+					if (doctor.getClass() != Surgeon.class) {
+						SurgeryAppointment appointment = new SurgeryAppointment(surgeryDate,doctor,3);
+					}
+					
 					break;
 			case 5: examination.decideTherapy();
 					break;
+			default:
+					break;
 		}
+		hospital.addPatient(examination.getPatient(), doctor);
+		examinedPatients.put(doctor, examination.getPatient());
 	}
 
   	private void listAllPatientsUnderCare(Doctor doctor) {
@@ -141,28 +151,24 @@ public class HospitalManager {
 		for (Analysis analysis: analyses) {
 			if(analysis.getResult() == 1) {
 				System.out.println(lineNum + ") " + analysis.getClass().getName() + " Result is positive");
-			} else {
+			}else {
 				System.out.println(lineNum + ") " + analysis.getClass().getName() + " Result is negative");
 			}
-			
 		}
 	}
 
 	private void listAllPatientExamined() {
-		
-		
+			
 	}
 
 	private Patient searchPatientExamined(String name) throws PatientNotFoundException {
 		return searchPatientByName(name);
 	}
 
-	private void searchSurgeryAppointed() {
-		
-		
+	private void searchSurgeryAppointed(String surgeonName) throws DoctorNotFoundException {
+		Doctor surgeon = searchDoctorByName(surgeonName);
+		Set<SurgeryAppointment> appointments = hospital.searchAnyAppointedSurgeryForSurgeon(surgeon);
 	}
-
-	
   	
 	private Examination examinePatient(Doctor doctor) {
 		try {
@@ -175,6 +181,7 @@ public class HospitalManager {
 		return null;
 		
 	}
+	
 	private Patient searchPatientByName(String name) throws PatientNotFoundException {
 		Set<Patient> patients = hospital.getPatients();
 		for(Patient patient: patients) {
@@ -184,6 +191,7 @@ public class HospitalManager {
 		}
 		throw new PatientNotFoundException();
 	}
+	
 	private Doctor searchDoctorByName(String name) throws DoctorNotFoundException {
 		Set<Doctor> doctors = hospital.getDoctors();
 		for(Doctor doctor: doctors) {
@@ -194,6 +202,16 @@ public class HospitalManager {
 		throw new DoctorNotFoundException();
 	}
 	
+	private Date dateParser(String dateStr) {
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+		Date date = null;
+		try {
+			date = sdf.parse(dateStr);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return date;
+	}
 
 	private void setHospital(Hospital hospital) {
 		this.hospital = hospital;
@@ -210,6 +228,8 @@ public class HospitalManager {
 	private void setReceptionistList(List<String> receptionistList) {
 		this.receptionistList = receptionistList;
 	}
-	
 
+	private void setExaminedPatients(Map<Doctor, Set<Patient>> examinedPatients) {
+		this.examinedPatients = examinedPatients;
+	}
 }

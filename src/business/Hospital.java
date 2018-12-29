@@ -13,12 +13,12 @@ import business.patient.Patient;
 public class Hospital {
 	
 	private Map<Doctor, Set<Patient>> doctors;
-	private Map<Surgeon, Set<SurgeryAppointment>> surgeryAppointments;
+	private Map<Doctor, Set<SurgeryAppointment>> surgeryAppointments;
 	private Map<Patient, Set<Analysis>> analyses;
 	
 	public Hospital() {
 		setDoctors(new HashMap<Doctor,Set<Patient>>() );
-	    setSurgeryAppointments(new HashMap<Surgeon,Set<SurgeryAppointment>>());
+	    setSurgeryAppointments(new HashMap<Doctor,Set<SurgeryAppointment>>());
 	    setAnalyses(new HashMap<Patient, Set<Analysis>>());
 	}
 	
@@ -83,7 +83,7 @@ public class Hospital {
 		return doctors.get(doctor);
 	}
 	
-	public Set<SurgeryAppointment> searchAnyAppointedSurgeryForSurgeon(Surgeon surgeon) {
+	public Set<SurgeryAppointment> searchAnyAppointedSurgeryForSurgeon(Doctor surgeon) {
 		return surgeryAppointments.get(surgeon);
 	}
 	
@@ -91,13 +91,11 @@ public class Hospital {
 	    this.doctors = doctors;
 	}
 
-	private void setSurgeryAppointments(Map<Surgeon, Set<SurgeryAppointment>> surgeryAppointments) {
+	private void setSurgeryAppointments(Map<Doctor, Set<SurgeryAppointment>> surgeryAppointments) {
 		this.surgeryAppointments = surgeryAppointments;
 	}
 
 	private void setAnalyses(Map<Patient, Set<Analysis>> analysisResults) {
 		this.analyses = analysisResults;
 	}
-	
-	
 }

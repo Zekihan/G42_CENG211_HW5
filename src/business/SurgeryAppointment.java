@@ -2,15 +2,18 @@ package business;
 
 import java.util.Date;
 
+import business.doctor.Doctor;
+import business.doctor.Surgeon;
+
 public class SurgeryAppointment {
 
 	private Date date;
-	private String surgeonName;
+	private Doctor surgeon;
 	private int numDaysAsInmate;
 	
-	public SurgeryAppointment(Date date, String surgeonName, int days) {
+	public SurgeryAppointment(Date date, Doctor doctor, int days) {
 		setDate(date);
-		setSurgeonName(surgeonName);
+		setSurgeon(doctor);
 		setNumDaysAsInmate(days);
 	}
 
@@ -19,7 +22,7 @@ public class SurgeryAppointment {
 	}
 
 	public String getSurgeonName() {
-		return surgeonName;
+		return surgeon.getName();
 	}
 
 	public int getNumDaysAsInmate() {
@@ -30,8 +33,8 @@ public class SurgeryAppointment {
 		this.date = date;
 	}
 
-	private void setSurgeonName(String surgeonName) {
-		this.surgeonName = surgeonName;
+	private void setSurgeon(Doctor surgeon) {
+		this.surgeon = surgeon;
 	}
 
 	private void setNumDaysAsInmate(int numDaysAsInmate) {
