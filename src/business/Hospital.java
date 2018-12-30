@@ -13,7 +13,7 @@ import business.exceptions.*;
 
 public class Hospital {
 	
-	private Map<Doctor, Set<Patient>> doctors;
+	private Map<Doctor, Set<Patient>> doctorsMap;
 	private Map<Doctor, Set<SurgeryAppointment>> surgeryAppointments;
 	private Map<Patient, Set<Analysis>> analyses;
 	
@@ -24,36 +24,36 @@ public class Hospital {
 	}
 	
 	public Set<Doctor> getDoctors() {
-	    return doctors.keySet();
+	    return doctorsMap.keySet();
 	}
 
 	public Set<Patient> getPatients() {
 		Set<Patient> patients = new HashSet<Patient>();
-		for(Set<Patient> patientSet : doctors.values()) {
+		for(Set<Patient> patientSet : doctorsMap.values()) {
 			patients.addAll(patientSet);
 		}
 	    return patients;
 	}
 
 	public void addDoctor(Doctor doctor) {
-	    doctors.put(doctor,new HashSet<Patient>());
+	    doctorsMap.put(doctor,new HashSet<Patient>());
 	}
 	
 	public void addDoctor(Doctor doctor, Set<Patient> patients) {
-	    doctors.put(doctor, patients);
+	    doctorsMap.put(doctor, patients);
 	}
 	
 	public void addPatient(Patient patient, Doctor doctor) throws DoctorNotFoundException {
-	    if(doctors.containsKey(doctor)) {
-	    	doctors.get(doctor).add(patient);
+	    if(doctorsMap.containsKey(doctor)) {
+	    	doctorsMap.get(doctor).add(patient);
 	    }else {
 	    	throw new DoctorNotFoundException();
 	    }
 	}
 	
-	public void addSurgeryAppointment(Surgeon surgeon, SurgeryAppointment appointment) {
-		surgeryAppointments.get(surgeon).add(appointment);
-	    surgeryAppointments.put(surgeon,surgeryAppointments.get(surgeon));
+	public void addSurgeryAppointment(Doctor doctor, SurgeryAppointment appointment) {
+		surgeryAppointments.get(doctor).add(appointment);
+	    surgeryAppointments.put(doctor,surgeryAppointments.get(doctor));
 	}
 	
 	public void addAnalysis(Patient patient,Analysis analysis){
@@ -73,15 +73,24 @@ public class Hospital {
 	}
 	
 	public Set<Patient> getAllPatientsUnderDoctorCare(Doctor doctor) {
-		return doctors.get(doctor);
+		return doctorsMap.get(doctor);
 	}
 	
 	public Set<Patient> getAllPatientsDoctorExamined(Doctor doctor) {
-		return doctors.get(doctor);
+		return doctorsMap.get(doctor);
+	}
+	
+	public Doctor searchSurgeonWithProfession(String profession) throws DoctorNotFoundException {
+		for (Doctor doctor: doctorsMap.keySet()) {
+			if(profession.equals(doctor.getProfession()) && doctor.getClass() == Surgeon.class) {
+				return doctor;
+			}
+		}
+		throw new DoctorNotFoundException();
 	}
 	
 	public Set<Patient> searchAnyPatientThatExaminedInThePast(Doctor doctor) {
-		return doctors.get(doctor);
+		return doctorsMap.get(doctor);
 	}
 	
 	public Set<SurgeryAppointment> searchAnyAppointedSurgeryForSurgeon(Doctor surgeon) {
@@ -99,9 +108,10 @@ public class Hospital {
 	}
 	
 	public Doctor searchDoctorByName(String name) throws DoctorNotFoundException {
-		Set<Doctor> doctors = getDoctors();
-		for(Doctor doctor: doctors) {
+		Set<Doctor> doctorsSet = getDoctors();
+		for(Doctor doctor: doctorsSet) {
 			if(doctor.getName().equals(name)) {
+				System.out.println("yes");
 				return doctor;
 			}
 		}
@@ -109,7 +119,7 @@ public class Hospital {
 	}
 	
 	private void setDoctors(Map<Doctor,Set<Patient>> doctors) {
-	    this.doctors = doctors;
+	    this.doctorsMap = doctors;
 	}
 
 	private void setSurgeryAppointments(Map<Doctor, Set<SurgeryAppointment>> surgeryAppointments) {

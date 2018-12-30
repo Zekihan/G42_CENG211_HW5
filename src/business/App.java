@@ -1,9 +1,14 @@
 package business;
 
+import business.doctor.Doctor;
+
 public class App {
 
 	public static void main(String[] args) {
-		HospitalManager mng = new HospitalManager();
+		Hospital hospital = new Hospital();
+		hospital.addDoctor(new Doctor("Rasit Midilli", "KBB"));
+
+		HospitalManager mng = new HospitalManager(hospital);
 		mng.start();
 	}
 }

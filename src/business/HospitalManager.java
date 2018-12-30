@@ -18,92 +18,117 @@ public class HospitalManager {
 	private List<String> receptionistList;
 	private Map<Doctor, Set<Patient>> examinedPatients;
 	
-	public HospitalManager() {
+	public HospitalManager(Hospital hospital) {
 		setDoctorLine(new HashMap<>());
-		setHospital(new Hospital());
+		setHospital(hospital);
 		setConsoleIn(new ConsoleInput());
-		setReceptionistList(new ArrayList<>());
+		List<String> receptionist = new ArrayList<>();
+		receptionist.add("Ayþe");
+		receptionist.add("Ahmet");
+		setReceptionistList(receptionist);
 		setExaminedPatients(new HashMap<>());
 	}
 	
 	public void start() {
-		System.out.println("Login as: "); 
-		int login = consoleIn.readInt();
-		try {
-			switch(login) {
-			case 0: doctorAccess();
-					break;
-			case 1: receptionistAccess();
-					break;
-			default:
-					break;
-		}
-		}catch(DoctorNotFoundException e) {
-			
-		}catch(AnalysisNotFoundException e){
-			
-		}catch(PatientNotFoundException e) {
+		while(true) {
+			System.out.println("Login as: " + System.lineSeparator() +
+					"1) Receptionist" + System.lineSeparator() + 
+					"2) Doctor"); 
+			int login = consoleIn.readInt();
+			try {
+				switch(login) {
+				case 2: doctorAccess();
+						break;
+				case 1: receptionistAccess();
+						break;
+				default:System.exit(0);
+						break;
+			}
+			}catch(DoctorNotFoundException e) {
+				System.out.println("DOCTOR NOT FOUND");
+			}catch(AnalysisNotFoundException e){
+				System.out.println("ANALYSIS NOT FOUND");
+			}catch(PatientNotFoundException e) {
+				System.out.println("PATIENT NOT FOUND");
+			}
 			
 		}
 		
 	}
 	
 	private void receptionistAccess() throws DoctorNotFoundException {
-		System.out.println("Please Choose Your Name: " + System.lineSeparator());
-		for (int i = 0; i < receptionistList.size(); i++) {
-			int lineNum = i + 1;
-			System.out.println(lineNum + ") " + receptionistList.get(i));
+		while(true) {
+			System.out.println("Please Choose Your Name or 0 for exit: " + System.lineSeparator());
+			for (int i = 0; i < receptionistList.size(); i++) {
+				int lineNum = i + 1;
+				System.out.println(lineNum + ") " + receptionistList.get(i));
+			}
+			int lineNum = consoleIn.readInt();
+			if(lineNum == 0) {
+				break;
+			}
+			System.out.println("Welcome " + receptionistList.get(lineNum - 1) );
+			System.out.println("Press enter any key to register new patient");
+			consoleIn.readString();
+			System.out.println("Enter the patient's name: ");
+			String patientName = consoleIn.readString();
+			System.out.println("Enter the doctor's name: ");
+			String doctorName = consoleIn.readString();
+			registerPatient(patientName, doctorName);
+			System.out.println("Successfully registered the patient");
 		}
-		int lineNum = consoleIn.readInt();
-		System.out.println("Welcome " + receptionistList.get(lineNum - 1) );
-		System.out.println("Press enter to register new patient");
-		consoleIn.readString();
-		System.out.println("Enter the patient's name: ");
-		String patientName = consoleIn.readString();
-		System.out.println("Enter the doctor's name: ");
-		String doctorName = consoleIn.readString();
-		registerPatient(patientName, doctorName);
-		System.out.println("Successfully registered the patient");
 	}
 
 	private void doctorAccess() throws PatientNotFoundException, AnalysisNotFoundException, DoctorNotFoundException {
-		System.out.println("Please Choose Your Name: " + System.lineSeparator());
-		Map<Integer, Doctor> doctorMap = new HashMap<>();
-		int lineNum = 1;
-		for (Doctor doctor : hospital.getDoctors()) {
-			System.out.println(lineNum + ") " + doctor.getName());
-			doctorMap.put(lineNum, doctor);
-			lineNum++;
+		while(true) {
+			System.out.println("Please Choose Your Name: " + System.lineSeparator());
+			Map<Integer, Doctor> doctorMap = new HashMap<>();
+			int lineNum = 1;
+			for (Doctor doctor : hospital.getDoctors()) {
+				System.out.println(lineNum + ") " + doctor.getName());
+				doctorMap.put(lineNum, doctor);
+				lineNum++;
+			}
+			lineNum = consoleIn.readInt();
+			Doctor doctor = doctorMap.get(lineNum);
+			System.out.println("Welcome Dr " + doctor.getName() + System.lineSeparator() +
+					"Menu: " + System.lineSeparator() + 
+					"0) Exit to login" + System.lineSeparator() +
+					"1) See next paitent on the waiting line " + System.lineSeparator() +
+					"2) List all patient under your care " + System.lineSeparator() + 
+					"3) Search and see result of analysis " + System.lineSeparator() + 
+					"4) List all patient examined " + System.lineSeparator() + 
+					"5) Search any patient examined in the past " + System.lineSeparator() + 
+					"6) Search any appointed surgery for you ");
+			int option = consoleIn.readInt();
+			if(option == 0) {
+				break;
+			}
+			
+			switch(option) {
+				case 1: seeNextPatient(doctor);
+						break;
+				case 2: listAllPatientsUnderCare(doctor);
+						break;
+				case 3: System.out.println("Enter the name of the patient:");
+						searchAnalysisResult(consoleIn.readString());
+						break;
+				case 4: listAllPatientExamined(doctor);
+						break;
+				case 5: System.out.println("Enter the name of the patient:");
+						searchPatientExamined(consoleIn.readString());
+						break;
+				case 6: searchSurgeryAppointed(doctor);
+						break;
+						
+			}
 		}
-		Doctor doctor = doctorMap.get(lineNum);
-		System.out.println("Welcome Dr " + doctor.getName() + System.lineSeparator() +
-				"Menu: " + System.lineSeparator() + 
-				"1) See next paitent on the waiting line " + System.lineSeparator() +
-				"2) List all patient under your care " + System.lineSeparator() + 
-				"3) Search and see result of analysis " + System.lineSeparator() + 
-				"4) List all patient examined " + System.lineSeparator() + 
-				"5) Search any patient examined in the past " + System.lineSeparator() + 
-				"6) Search any appointed surgery for you ");
-		int option = consoleIn.readInt();
-		switch(option) {
-			case 1: seeNextPatient(doctor);
-					break;
-			case 2: listAllPatientsUnderCare(doctor);
-					break;
-			case 3: System.out.println("Enter the name of the patient:");
-					searchAnalysisResult(consoleIn.readString());
-					break;
-			case 4: listAllPatientExamined(doctor);
-					break;
-			case 5: System.out.println("Enter the name of the patient:");
-					searchPatientExamined(consoleIn.readString());
-					break;
-			case 6: searchSurgeryAppointed(doctor);
-		}
+		
 	}
 	
 	private void registerPatient(String patientName, String doctorName) throws DoctorNotFoundException {
 		Patient patient = new WalkingCase(patientName);
+		System.out.println(doctorName);
 		Doctor doc = hospital.searchDoctorByName(doctorName);
 		if(!doctorLine.containsKey(doc)) {
 			doctorLine.put(doc, new LinkedList<Patient>());
@@ -130,8 +155,14 @@ public class HospitalManager {
 			case 4: examination.decideSurgery();
 					System.out.println("Enter date in format (dd-MM-yyyy): ");
 					Date surgeryDate = dateParser(consoleIn.readString());
-					if (doctor.getClass() != Surgeon.class) {
-						SurgeryAppointment appointment = new SurgeryAppointment(surgeryDate,doctor,3);
+					System.out.println("Enter the number of days that patient need to stay in hospital: ");
+					if (doctor.getClass() == Surgeon.class) {
+						SurgeryAppointment appointment = new SurgeryAppointment(surgeryDate, doctor, consoleIn.readInt());
+						hospital.addSurgeryAppointment(doctor, appointment);
+					}else {
+						Doctor surgeon = hospital.searchSurgeonWithProfession(doctor.getProfession());
+						SurgeryAppointment appointment = new SurgeryAppointment(surgeryDate, surgeon, consoleIn.readInt());
+						hospital.addSurgeryAppointment(surgeon, appointment);
 					}
 					
 					break;
@@ -162,8 +193,10 @@ public class HospitalManager {
 		for (Analysis analysis: analyses) {
 			if(analysis.getResult() == 1) {
 				System.out.println(lineNum + ") " + analysis.getClass().getName() + " Result is positive");
-			}else {
+			}else if (analysis.getResult() == 0) {
 				System.out.println(lineNum + ") " + analysis.getClass().getName() + " Result is negative");
+			}else {
+				System.out.println("Result is not ready");
 			}
 			lineNum++;
 		}

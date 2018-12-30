@@ -14,13 +14,12 @@ public class ConsoleInput {
 	}
 	
 	public int readInt() {
-		
 		int inputValue = keyboard.nextInt();
 		return inputValue;
 	}
 	
 	public String readString() {
-		
+		keyboard.useDelimiter(System.lineSeparator());
 		String inputValue = keyboard.next();
 		return inputValue;
 	}
