@@ -9,6 +9,7 @@ import business.analysis.Analysis;
 import business.doctor.Doctor;
 import business.doctor.Surgeon;
 import business.patient.Patient;
+import business.exceptions.*;
 
 public class Hospital {
 	
@@ -85,6 +86,26 @@ public class Hospital {
 	
 	public Set<SurgeryAppointment> searchAnyAppointedSurgeryForSurgeon(Doctor surgeon) {
 		return surgeryAppointments.get(surgeon);
+	}
+	
+	public Patient searchPatientByName(String name) throws PatientNotFoundException {
+		Set<Patient> patients = getPatients();
+		for(Patient patient: patients) {
+			if(patient.getName().equals(name)) {
+				return patient;
+			}
+		}
+		throw new PatientNotFoundException();
+	}
+	
+	public Doctor searchDoctorByName(String name) throws DoctorNotFoundException {
+		Set<Doctor> doctors = getDoctors();
+		for(Doctor doctor: doctors) {
+			if(doctor.getName().equals(name)) {
+				return doctor;
+			}
+		}
+		throw new DoctorNotFoundException();
 	}
 	
 	private void setDoctors(Map<Doctor,Set<Patient>> doctors) {

@@ -25,7 +25,6 @@ public abstract class Analysis {
 	public Date getResultDate() {
 		return resultDate;
 	}
-	
 
 	private Date resultDateCalc(int NumOfDaysRequired) {
 		long timeInMs = NumOfDaysRequired * 86400000;

@@ -6,6 +6,7 @@ import java.util.*;
 
 import business.analysis.Analysis;
 import business.doctor.*;
+import business.exceptions.*;
 import business.patient.*;
 import dataaccess.ConsoleInput;
 
@@ -28,7 +29,8 @@ public class HospitalManager {
 	public void start() {
 		System.out.println("Login as: "); 
 		int login = consoleIn.readInt();
-		switch(login) {
+		try {
+			switch(login) {
 			case 0: doctorAccess();
 					break;
 			case 1: receptionistAccess();
@@ -36,6 +38,14 @@ public class HospitalManager {
 			default:
 					break;
 		}
+		}catch(DoctorNotFoundException e) {
+			
+		}catch(AnalysisNotFoundException e){
+			
+		}catch(PatientNotFoundException e) {
+			
+		}
+		
 	}
 	
 	private void receptionistAccess() throws DoctorNotFoundException {
@@ -56,7 +66,7 @@ public class HospitalManager {
 		System.out.println("Successfully registered the patient");
 	}
 
-	private void doctorAccess() throws PatientNotFoundException, AnalysisNotFoundException {
+	private void doctorAccess() throws PatientNotFoundException, AnalysisNotFoundException, DoctorNotFoundException {
 		System.out.println("Please Choose Your Name: " + System.lineSeparator());
 		Map<Integer, Doctor> doctorMap = new HashMap<>();
 		int lineNum = 1;
@@ -83,24 +93,22 @@ public class HospitalManager {
 			case 3: System.out.println("Enter the name of the patient:");
 					searchAnalysisResult(consoleIn.readString());
 					break;
-			case 4: listAllPatientExamined();
+			case 4: listAllPatientExamined(doctor);
 					break;
 			case 5: System.out.println("Enter the name of the patient:");
 					searchPatientExamined(consoleIn.readString());
 					break;
-			case 6: searchSurgeryAppointed();
+			case 6: searchSurgeryAppointed(doctor);
 		}
 	}
 	
 	private void registerPatient(String patientName, String doctorName) throws DoctorNotFoundException {
 		Patient patient = new WalkingCase(patientName);
-		Doctor doc = searchDoctorByName(doctorName);
-		if(doctorLine.containsKey(doc)) {
-			doctorLine.get(doc).add(patient);
-		}else {
+		Doctor doc = hospital.searchDoctorByName(doctorName);
+		if(!doctorLine.containsKey(doc)) {
 			doctorLine.put(doc, new LinkedList<Patient>());
-			doctorLine.get(doc).add(patient);
-		}	
+		}
+		doctorLine.get(doc).add(patient);
 	}
 	
 	private void seeNextPatient(Doctor doctor) throws DoctorNotFoundException {
@@ -133,7 +141,10 @@ public class HospitalManager {
 					break;
 		}
 		hospital.addPatient(examination.getPatient(), doctor);
-		examinedPatients.put(doctor, examination.getPatient());
+		if(!examinedPatients.containsKey(doctor)) {
+			examinedPatients.put(doctor, new HashSet<Patient>());
+		}
+		examinedPatients.get(doctor).add(examination.getPatient());
 	}
 
   	private void listAllPatientsUnderCare(Doctor doctor) {
@@ -145,7 +156,7 @@ public class HospitalManager {
 	}
 
 	private void searchAnalysisResult(String patientName) throws PatientNotFoundException, AnalysisNotFoundException {
-		Patient patient = searchPatientByName(patientName);
+		Patient patient = hospital.searchPatientByName(patientName);
 		Set<Analysis> analyses = hospital.searchAnalyses(patient);
 		int lineNum = 1;
 		for (Analysis analysis: analyses) {
@@ -154,20 +165,31 @@ public class HospitalManager {
 			}else {
 				System.out.println(lineNum + ") " + analysis.getClass().getName() + " Result is negative");
 			}
+			lineNum++;
 		}
 	}
 
-	private void listAllPatientExamined() {
-			
+	private void listAllPatientExamined(Doctor doctor) {
+		System.out.println("Today you have examined: ");
+		int lineNum = 1;
+		for(Patient patient: examinedPatients.get(doctor)){
+			System.out.println(lineNum + ") " + patient.toString());
+			lineNum++;
+		}
+		
 	}
 
 	private Patient searchPatientExamined(String name) throws PatientNotFoundException {
-		return searchPatientByName(name);
+		return hospital.searchPatientByName(name);
 	}
 
-	private void searchSurgeryAppointed(String surgeonName) throws DoctorNotFoundException {
-		Doctor surgeon = searchDoctorByName(surgeonName);
-		Set<SurgeryAppointment> appointments = hospital.searchAnyAppointedSurgeryForSurgeon(surgeon);
+	private void searchSurgeryAppointed(Doctor doctor) {
+		int lineNum = 1;
+		Set<SurgeryAppointment> appointments = hospital.searchAnyAppointedSurgeryForSurgeon(doctor);
+		for(SurgeryAppointment appointment: appointments) {
+			System.out.println(lineNum + ") " + appointment.toString());
+			lineNum++;
+		}
 	}
   	
 	private Examination examinePatient(Doctor doctor) {
@@ -180,26 +202,6 @@ public class HospitalManager {
 		}
 		return null;
 		
-	}
-	
-	private Patient searchPatientByName(String name) throws PatientNotFoundException {
-		Set<Patient> patients = hospital.getPatients();
-		for(Patient patient: patients) {
-			if(patient.getName().equals(name)) {
-				return patient;
-			}
-		}
-		throw new PatientNotFoundException();
-	}
-	
-	private Doctor searchDoctorByName(String name) throws DoctorNotFoundException {
-		Set<Doctor> doctors = hospital.getDoctors();
-		for(Doctor doctor: doctors) {
-			if(doctor.getName().equals(name)) {
-				return doctor;
-			}
-		}
-		throw new DoctorNotFoundException();
 	}
 	
 	private Date dateParser(String dateStr) {
