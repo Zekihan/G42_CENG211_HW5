@@ -38,10 +38,6 @@ public class Examination {
 	public void decideTherapy() {
 		
 	}	
-	public void writePrescription() {
-		// TODO Auto-generated method stub
-		
-	}
 	
 	private void setDoctor(Doctor doctor) {
 		this.doctor = doctor;
@@ -49,6 +45,11 @@ public class Examination {
 
 	private void setPatient(Patient patient) {
 		this.patient = patient;
+	}
+
+	@Override
+	public String toString() {
+		return "Examination [doctor=" + doctor + ", patient=" + patient + "]";
 	}
 
 

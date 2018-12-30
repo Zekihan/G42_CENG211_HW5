@@ -6,5 +6,10 @@ public class WalkingCase extends Patient {
 		super(name);
 		// TODO Auto-generated constructor stub
 	}
+
+	@Override
+	public String toString() {
+		return "WalkingCase " + super.toString() ;
+	}
 	
 }

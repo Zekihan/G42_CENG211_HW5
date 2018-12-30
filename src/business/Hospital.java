@@ -52,8 +52,10 @@ public class Hospital {
 	}
 	
 	public void addSurgeryAppointment(Doctor doctor, SurgeryAppointment appointment) {
+		if (!surgeryAppointments.containsKey(doctor)) {
+			surgeryAppointments.put(doctor, new HashSet<SurgeryAppointment>());
+		}
 		surgeryAppointments.get(doctor).add(appointment);
-	    surgeryAppointments.put(doctor,surgeryAppointments.get(doctor));
 	}
 	
 	public void addAnalysis(Patient patient,Analysis analysis){
@@ -111,7 +113,6 @@ public class Hospital {
 		Set<Doctor> doctorsSet = getDoctors();
 		for(Doctor doctor: doctorsSet) {
 			if(doctor.getName().equals(name)) {
-				System.out.println("yes");
 				return doctor;
 			}
 		}

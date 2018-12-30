@@ -57,43 +57,42 @@ public class HospitalManager {
 	}
 	
 	private void receptionistAccess() throws DoctorNotFoundException {
+		System.out.println("Please Choose Your Name: ");
+		for (int i = 0; i < receptionistList.size(); i++) {
+			int lineNum = i + 1;
+			System.out.println(lineNum + ") " + receptionistList.get(i));
+		}
+		int lineNum = consoleIn.readInt();
+		System.out.println("Welcome " + receptionistList.get(lineNum - 1) );
 		while(true) {
-			System.out.println("Please Choose Your Name or 0 for exit: " + System.lineSeparator());
-			for (int i = 0; i < receptionistList.size(); i++) {
-				int lineNum = i + 1;
-				System.out.println(lineNum + ") " + receptionistList.get(i));
-			}
-			int lineNum = consoleIn.readInt();
-			if(lineNum == 0) {
+			System.out.println("Enter any key to register new patient or 0 for exit to login screen:");
+			if(consoleIn.readString().equals("0")) {
 				break;
 			}
-			System.out.println("Welcome " + receptionistList.get(lineNum - 1) );
-			System.out.println("Press enter any key to register new patient");
-			consoleIn.readString();
 			System.out.println("Enter the patient's name: ");
 			String patientName = consoleIn.readString();
-			System.out.println("Enter the doctor's name: ");
-			String doctorName = consoleIn.readString();
-			registerPatient(patientName, doctorName);
+			System.out.println("Choose the doctor: ");
+			registerPatient(patientName);
 			System.out.println("Successfully registered the patient");
 		}
 	}
 
 	private void doctorAccess() throws PatientNotFoundException, AnalysisNotFoundException, DoctorNotFoundException {
+		
+		System.out.println("Please Choose Your Name: " + System.lineSeparator());
+		Map<Integer, Doctor> doctorMap = new HashMap<>();
+		int lineNum = 1;
+		for (Doctor doctor : hospital.getDoctors()) {
+			System.out.println(lineNum + ") " + doctor.getName());
+			doctorMap.put(lineNum, doctor);
+			lineNum++;
+		}
+		lineNum = consoleIn.readInt();
+		Doctor doctor = doctorMap.get(lineNum);
 		while(true) {
-			System.out.println("Please Choose Your Name: " + System.lineSeparator());
-			Map<Integer, Doctor> doctorMap = new HashMap<>();
-			int lineNum = 1;
-			for (Doctor doctor : hospital.getDoctors()) {
-				System.out.println(lineNum + ") " + doctor.getName());
-				doctorMap.put(lineNum, doctor);
-				lineNum++;
-			}
-			lineNum = consoleIn.readInt();
-			Doctor doctor = doctorMap.get(lineNum);
 			System.out.println("Welcome Dr " + doctor.getName() + System.lineSeparator() +
 					"Menu: " + System.lineSeparator() + 
-					"0) Exit to login" + System.lineSeparator() +
+					"0) Exit to login screen" + System.lineSeparator() +
 					"1) See next paitent on the waiting line " + System.lineSeparator() +
 					"2) List all patient under your care " + System.lineSeparator() + 
 					"3) Search and see result of analysis " + System.lineSeparator() + 
@@ -116,20 +115,25 @@ public class HospitalManager {
 				case 4: listAllPatientExamined(doctor);
 						break;
 				case 5: System.out.println("Enter the name of the patient:");
-						searchPatientExamined(consoleIn.readString());
+						System.out.println(searchPatientExamined(consoleIn.readString()).toString());
 						break;
 				case 6: searchSurgeryAppointed(doctor);
-						break;
-						
+						break;			
 			}
 		}
-		
 	}
 	
-	private void registerPatient(String patientName, String doctorName) throws DoctorNotFoundException {
+	private void registerPatient(String patientName) throws DoctorNotFoundException {
 		Patient patient = new WalkingCase(patientName);
-		System.out.println(doctorName);
-		Doctor doc = hospital.searchDoctorByName(doctorName);
+		Map<Integer, Doctor> doctorMap = new HashMap<>();
+		int lineNum = 1;
+		for (Doctor doctor : hospital.getDoctors()) {
+			System.out.println(lineNum + ") " + doctor.getName());
+			doctorMap.put(lineNum, doctor);
+			lineNum++;
+		}
+		lineNum = consoleIn.readInt();
+		Doctor doc = doctorMap.get(lineNum);
 		if(!doctorLine.containsKey(doc)) {
 			doctorLine.put(doc, new LinkedList<Patient>());
 		}
@@ -138,47 +142,68 @@ public class HospitalManager {
 	
 	private void seeNextPatient(Doctor doctor) throws DoctorNotFoundException {
 		Examination examination = examinePatient(doctor);
-		System.out.println(
-				"1) Ask for blood test" + System.lineSeparator() + 
-				"2) Ask for radiology" + System.lineSeparator() + 
-				"3) Write prescription" + System.lineSeparator() + 
-				"4) Decide on surgery" + System.lineSeparator() + 
-				"5) Decide on therapy");
-		int decision = consoleIn.readInt();
-		switch(decision) {
-			case 1: hospital.addAnalysis(examination.getPatient(), examination.askForBloodTest());
-					break;
-			case 2: hospital.addAnalysis(examination.getPatient(), examination.askForRadiology());
-					break;
-			case 3: examination.writePrescription();
-					break;
-			case 4: examination.decideSurgery();
-					System.out.println("Enter date in format (dd-MM-yyyy): ");
-					Date surgeryDate = dateParser(consoleIn.readString());
-					System.out.println("Enter the number of days that patient need to stay in hospital: ");
-					if (doctor.getClass() == Surgeon.class) {
-						SurgeryAppointment appointment = new SurgeryAppointment(surgeryDate, doctor, consoleIn.readInt());
-						hospital.addSurgeryAppointment(doctor, appointment);
-					}else {
-						Doctor surgeon = hospital.searchSurgeonWithProfession(doctor.getProfession());
-						SurgeryAppointment appointment = new SurgeryAppointment(surgeryDate, surgeon, consoleIn.readInt());
-						hospital.addSurgeryAppointment(surgeon, appointment);
-					}
-					
-					break;
-			case 5: examination.decideTherapy();
-					break;
-			default:
-					break;
+		while(true) {
+			System.out.println(
+					"0) End seeing patient" + System.lineSeparator() +
+					"1) Ask for blood test" + System.lineSeparator() + 
+					"2) Ask for radiology" + System.lineSeparator() + 
+					"3) Write prescription" + System.lineSeparator() + 
+					"4) Decide on surgery" + System.lineSeparator() + 
+					"5) Decide on therapy");
+			int decision = consoleIn.readInt();
+			if (decision == 0) {
+				break;
+			}
+			switch(decision) {
+				case 1: hospital.addAnalysis(examination.getPatient(), examination.askForBloodTest());
+						break;
+				case 2: hospital.addAnalysis(examination.getPatient(), examination.askForRadiology());
+						break;
+				case 3: writePrescription();
+						break;
+				case 4: examination.decideSurgery();
+						System.out.println("Enter date in format (dd-MM-yyyy): ");
+						Date surgeryDate = dateParser(consoleIn.readString());
+						System.out.println("Enter the number of days that patient need to stay in hospital: ");
+						int dayNum = consoleIn.readInt();
+						if (doctor.getClass() == Surgeon.class) {
+							SurgeryAppointment appointment = new SurgeryAppointment(surgeryDate, doctor, dayNum);
+							hospital.addSurgeryAppointment(doctor, appointment);
+						}else {
+							Doctor surgeon;
+							try {
+								surgeon = hospital.searchSurgeonWithProfession(doctor.getProfession());
+							} catch (DoctorNotFoundException e) {
+								System.out.println("No surgeon found with certain profession");
+								break;
+							}
+							SurgeryAppointment appointment = new SurgeryAppointment(surgeryDate, surgeon, dayNum);
+							hospital.addSurgeryAppointment(surgeon, appointment);
+						}
+						System.out.println("Successfully got surgery appointment.");
+						break;
+				case 5: examination.decideTherapy();
+						break;
+				default:
+						break;
+			}
+			hospital.addPatient(examination.getPatient(), doctor);
+			if(!examinedPatients.containsKey(doctor)) {
+				examinedPatients.put(doctor, new HashSet<Patient>());
+			}
+			examinedPatients.get(doctor).add(examination.getPatient());
 		}
-		hospital.addPatient(examination.getPatient(), doctor);
-		if(!examinedPatients.containsKey(doctor)) {
-			examinedPatients.put(doctor, new HashSet<Patient>());
-		}
-		examinedPatients.get(doctor).add(examination.getPatient());
 	}
 
-  	private void listAllPatientsUnderCare(Doctor doctor) {
+  	private void writePrescription() {
+  		System.out.println("Enter the items comma seperated: ");
+  		consoleIn.readString();
+  		System.out.println("Thanks for writing items here but you should also write it to paper"
+  				+ " and hand it to patient because writing here has no help." + System.lineSeparator());
+		
+	}
+
+	private void listAllPatientsUnderCare(Doctor doctor) {
   		int lineNum = 1;
 		for(Patient patient: hospital.getAllPatientsUnderDoctorCare(doctor)) {
 			System.out.println(lineNum + ") " + patient.toString());
@@ -196,7 +221,7 @@ public class HospitalManager {
 			}else if (analysis.getResult() == 0) {
 				System.out.println(lineNum + ") " + analysis.getClass().getName() + " Result is negative");
 			}else {
-				System.out.println("Result is not ready");
+				System.out.println(lineNum + ") " + analysis.getClass().getName() + " Result is not ready");
 			}
 			lineNum++;
 		}
@@ -205,6 +230,9 @@ public class HospitalManager {
 	private void listAllPatientExamined(Doctor doctor) {
 		System.out.println("Today you have examined: ");
 		int lineNum = 1;
+		if (examinedPatients.get(doctor) == null) {
+			System.out.println("You didn't examined any patients");
+		}
 		for(Patient patient: examinedPatients.get(doctor)){
 			System.out.println(lineNum + ") " + patient.toString());
 			lineNum++;
@@ -229,9 +257,10 @@ public class HospitalManager {
 		try {
 			Patient patient = doctorLine.get(doctor).remove();
 			Examination examination = new Examination(doctor, patient);
+			System.out.println("You are examining patient " + patient.getName());
 			return examination;
-		}catch(NoSuchElementException e){
-			System.out.println("There aren't any patient waiting"); 
+		}catch(Exception e){
+			System.out.println("There aren't any patient waiting on the line" + System.lineSeparator()); 
 		}
 		return null;
 		

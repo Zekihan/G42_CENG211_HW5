@@ -6,4 +6,9 @@ public class Radiology extends Analysis {
 		super(2);
 	}
 
+	@Override
+	public String toString() {
+		return "Radiology " + super.toString();
+	}
+
 }

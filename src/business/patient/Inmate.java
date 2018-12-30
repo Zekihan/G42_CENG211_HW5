@@ -11,5 +11,10 @@ public class Inmate extends Patient {
 		super(patient.getName());
 		// TODO Auto-generated constructor stub
 	}
+
+	@Override
+	public String toString() {
+		return "Inmate [toString()=" + super.toString() + "]";
+	}
 	
 }

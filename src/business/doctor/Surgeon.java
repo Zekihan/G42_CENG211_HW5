@@ -9,4 +9,10 @@ public class Surgeon extends Doctor {
 	public void doSurgery() {
 		
 	}
+
+	@Override
+	public String toString() {
+		return "Surgeon"  + super.toString()  ;
+	}
+	
 }

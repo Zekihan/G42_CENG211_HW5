@@ -21,5 +21,10 @@ public abstract class Patient {
 	private void setName(String name) {
 		this.name = name;
 	}
+
+	@Override
+	public String toString() {
+		return "Patient [name=" + name + "]";
+	}
 	
 }

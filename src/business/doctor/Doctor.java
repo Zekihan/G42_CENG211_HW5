@@ -27,4 +27,10 @@ public class Doctor {
 	private void setProfession(String profession) {
 		this.profession = profession;
 	}
+
+	@Override
+	public String toString() {
+		return "Doctor [name=" + name + ", profession=" + profession + "]";
+	}
+	
 }

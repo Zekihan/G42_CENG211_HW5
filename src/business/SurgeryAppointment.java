@@ -40,6 +40,12 @@ public class SurgeryAppointment {
 	private void setNumDaysAsInmate(int numDaysAsInmate) {
 		this.numDaysAsInmate = numDaysAsInmate;
 	}
+
+	@Override
+	public String toString() {
+		return "SurgeryAppointment [date=" + date + ", surgeon=" + surgeon + ", numDaysAsInmate=" + numDaysAsInmate
+				+ "]";
+	}
 	
 	
 }
