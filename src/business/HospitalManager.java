@@ -252,9 +252,11 @@ public class HospitalManager {
 	private void searchSurgeryAppointed(Doctor doctor) {
 		int lineNum = 1;
 		Set<SurgeryAppointment> appointments = hospital.searchAnyAppointedSurgeryForSurgeon(doctor);
-		for(SurgeryAppointment appointment: appointments) {
+		if(appointments != null) {
+			for(SurgeryAppointment appointment: appointments) {
 			System.out.println(lineNum + ") " + appointment.toString());
 			lineNum++;
+			}
 		}
 	}
   	
