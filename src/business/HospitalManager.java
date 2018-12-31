@@ -23,8 +23,8 @@ public class HospitalManager {
 		setHospital(hospital);
 		setConsoleIn(new ConsoleInput());
 		List<String> receptionist = new ArrayList<>();
-		receptionist.add("Ayþe");
-		receptionist.add("Ahmet");
+		receptionist.add("Ayþe Koç");
+		receptionist.add("Ahmet Soydan");
 		setReceptionistList(receptionist);
 		setExaminedPatients(new HashMap<>());
 	}
