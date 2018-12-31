@@ -45,11 +45,11 @@ public class HospitalManager {
 						break;
 			}
 			}catch(DoctorNotFoundException e) {
-				System.out.println("DOCTOR NOT FOUND");
+				System.out.println("Doctor not found with given name.");
 			}catch(AnalysisNotFoundException e){
-				System.out.println("ANALYSIS NOT FOUND");
+				System.out.println("Analysis not found for given patient.");
 			}catch(PatientNotFoundException e) {
-				System.out.println("PATIENT NOT FOUND");
+				System.out.println("Patient not found");
 			}
 			
 		}
@@ -140,8 +140,12 @@ public class HospitalManager {
 		doctorLine.get(doc).add(patient);
 	}
 	
-	private void seeNextPatient(Doctor doctor) throws DoctorNotFoundException {
+	private void seeNextPatient(Doctor doctor) throws DoctorNotFoundException, PatientNotFoundException {
 		Examination examination = examinePatient(doctor);
+		if(examination == null){
+			throw new PatientNotFoundException();
+		}
+		
 		while(true) {
 			System.out.println(
 					"0) End seeing patient" + System.lineSeparator() +
@@ -153,8 +157,8 @@ public class HospitalManager {
 			int decision = consoleIn.readInt();
 			if (decision == 0) {
 				break;
-			}
-			switch(decision) {
+			}else {
+				switch(decision) {
 				case 1: hospital.addAnalysis(examination.getPatient(), examination.askForBloodTest());
 						break;
 				case 2: hospital.addAnalysis(examination.getPatient(), examination.askForRadiology());
@@ -186,13 +190,14 @@ public class HospitalManager {
 						break;
 				default:
 						break;
+				}
 			}
-			hospital.addPatient(examination.getPatient(), doctor);
-			if(!examinedPatients.containsKey(doctor)) {
-				examinedPatients.put(doctor, new HashSet<Patient>());
-			}
-			examinedPatients.get(doctor).add(examination.getPatient());
 		}
+		hospital.addPatient(examination.getPatient(), doctor);
+		if(!examinedPatients.containsKey(doctor)) {
+			examinedPatients.put(doctor, new HashSet<Patient>());
+		}
+		examinedPatients.get(doctor).add(examination.getPatient());
 	}
 
   	private void writePrescription() {
