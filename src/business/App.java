@@ -9,6 +9,7 @@ public class App {
 		Hospital hospital = new Hospital();
 		hospital.addDoctor(new Doctor("Ahmet Öztürk", "KBB"));
 		hospital.addDoctor(new Surgeon("Rasit Midilli", "KBB"));
+		hospital.addDoctor(new Doctor("Bülent Karabulut", "Onkoloji"));
 		
 		HospitalManager mng = new HospitalManager(hospital);
 		mng.start();

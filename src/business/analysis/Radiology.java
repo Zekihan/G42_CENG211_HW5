@@ -3,7 +3,7 @@ package business.analysis;
 public class Radiology extends Analysis {
 	
 	public Radiology() {
-		super(2);
+		super(1);
 	}
 
 	@Override

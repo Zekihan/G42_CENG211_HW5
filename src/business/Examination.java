@@ -1,6 +1,8 @@
 package business;
 
 import business.patient.*;
+import business.treatment.Therapy;
+import business.treatment.Treatment;
 import business.analysis.*;
 import business.doctor.*;
 
@@ -24,8 +26,11 @@ public class Examination {
 	
 	public void decideSurgery() {
 		patient = new Inmate(patient.getName());
-		
 	}
+	
+	public Treatment decideTherapy() {
+		return new Therapy();
+	}	
 	
 	public Doctor getDoctor() {
 		return doctor;
@@ -34,10 +39,6 @@ public class Examination {
 	public Patient getPatient() {
 		return patient;
 	}
-
-	public void decideTherapy() {
-		
-	}	
 	
 	private void setDoctor(Doctor doctor) {
 		this.doctor = doctor;

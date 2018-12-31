@@ -217,11 +217,11 @@ public class HospitalManager {
 		int lineNum = 1;
 		for (Analysis analysis: analyses) {
 			if(analysis.getResult() == 1) {
-				System.out.println(lineNum + ") " + analysis.getClass().getName() + " Result is positive");
+				System.out.println(lineNum + ") " + analysis.toString() + " Result is positive");
 			}else if (analysis.getResult() == 0) {
-				System.out.println(lineNum + ") " + analysis.getClass().getName() + " Result is negative");
+				System.out.println(lineNum + ") " + analysis.toString() + " Result is negative");
 			}else {
-				System.out.println(lineNum + ") " + analysis.getClass().getName() + " Result is not ready");
+				System.out.println(lineNum + ") " + analysis.toString() + " Result is not ready");
 			}
 			lineNum++;
 		}
